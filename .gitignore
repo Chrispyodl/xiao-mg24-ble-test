@@ -1,0 +1,71 @@
+# ---------------------------------------------
+# Secrets and personal settings (most important!)
+# ---------------------------------------------
+.env
+.env.*
+*.env
+secrets.py
+secrets.json
+secrets.yaml
+secrets.yml
+config.local.*
+*.key
+*.pem
+*.token
+credentials.json
+
+# ---------------------------------------------
+# Python
+# ---------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------
+# Logs and temporary files
+# ---------------------------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# ---------------------------------------------
+# macOS
+# ---------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ---------------------------------------------
+# Linux
+# ---------------------------------------------
+.directory
+.Trash-*
+
+# ---------------------------------------------
+# Nextcloud sync leftovers
+# ---------------------------------------------
+.sync_*.db
+.sync_*.db-*
+.owncloud
+*.sync-conflict-*
+*_conflict-*
+
+# ---------------------------------------------
+# Editors
+# ---------------------------------------------
+.vscode/
+.idea/
