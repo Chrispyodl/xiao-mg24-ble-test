@@ -28,7 +28,6 @@ The XIAO acts as a BLE peripheral that switches a GPIO pin (an LED on D3 = `gpio
 |---|---|---|
 | MG24_ble.py | XIAO MG24 | Zephyr MicroPython: **no f-strings**, no aioble |
 | pc_gpio.py | Nobara PC | Desktop Python 3.14 + bleak; f-strings fine |
-| pico_a.py | Raspberry Pi Pico (x2) | Pico MicroPython + aioble; f-strings fine |
 
 All three use the same custom 128-bit UUID family (`250f000N-7eea-4188-bc62-8b1fc867bbea`; 1 = service, 2 = command, 3 = response).  If you change UUIDs in one file, change them in the others that talk to it.
 
@@ -61,12 +60,6 @@ Uses the plain `bluetooth` module (no asyncio, no aioble); `main()` at module le
 Runs on the Nobara PC in Thonny with the local Python interpreter, using `bleak` (BlueZ).  It scans for `SVC_UUID`, connects, subscribes to the response characteristic, then loops: prompts for pin (Enter = `gpioc,3`, `q` quits) and high/low, writes `"<msg_no>,<port>,<pin>,<level>"`, and waits up to `RESPONSE_TIMEOUT` for the reply with the matching `msg_no`.  On a lost connection it rescans and reconnects.
 
 - `input()` blocks the asyncio loop, so a disconnect while at the prompt is only noticed when the next command is about to be sent.  Fine for this demo.
-
-## pico_a.py: Pico BLE Central/Peripheral demo (reference)
-
-Kept as a working reference; the Pico is no longer part of the target setup.  Keep it working unless I say otherwise.  Committed after fixes but not re-tested on the Picos since then.
-
-One script serves both roles.  The `IAM` constant (`"Central"` or `"Peripheral"`) picks the role, so you flash two boards with the same file and change `IAM` on one of them.  `asyncio.run(main())` at module level starts it.
 
 - **Peripheral** (`run_peripheral_mode`): registers a GATT service (`BLE_SVC_UUID`) with a write-only **command** characteristic (`BLE_CMD_UUID`, `capture=True`) and a read/notify **response** characteristic (`BLE_RESP_UUID`).  It advertises under the name `IAM`, and once connected loops in `receive_commands_task`: it waits on `command_char.written()`, calls `handle_command()`, and replies `"OK"` or `"Err"` by writing and notifying the response characteristic.  When the central disconnects, it advertises again.
 - **Central** (`run_central_mode`): `ble_scan` looks for a device whose advertised name equals `IAM_SENDING_TO` and that advertises `BLE_SVC_UUID`.  The central connects, discovers both characteristics, subscribes to response notifications, and then loops in `send_commands_task`: it writes a command (with response) and waits on `response_char.notified()` for OK/Err.  When the peripheral disconnects, it scans again.
